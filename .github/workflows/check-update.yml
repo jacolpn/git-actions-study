@@ -1,11 +1,11 @@
-name: Verificar Atualização da Branch
+name: Auto update branch
 
 on:
   pull_request:
     types:
       - labeled
   schedule:
-    - cron: '0 * * * *' # Executar a cada hora
+    - cron: '0 * * * *' # Run every hour
 
 jobs:
   update-branch:
@@ -23,26 +23,19 @@ jobs:
       - name: Update branch
         run: |
           echo "Pull request head ééé: {{ toJSON(github.event.pull_request.head) }}"
+
           git fetch origin
-          echo "one -----------------"
           git checkout ${{ github.event.pull_request.head.ref }}
-          echo "two -----------------"
-
           git config pull.rebase false
-
-          echo "two2 -----------------"
-
           git pull origin main
 
-          # Verificar se há conflitos durante o pull
+          # Verify conflicts
           if git diff --name-only --diff-filter=U | grep -q .; then
             echo "Conflitos detectados durante o pull. Resolva manualmente e faça o commit."
             exit 1
           fi
 
-          echo "three -----------------"
           git push origin ${{ github.event.pull_request.head.ref }}
-          echo "four -----------------"
 
   remove-label:
     needs: [update-branch]
