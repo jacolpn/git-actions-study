@@ -21,9 +21,16 @@ jobs:
         run: git config user.email "<>" && git config user.name "🤖 github-actions[bot]"
 
       - name: Update branch
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GH_API_TOKEN }}
+        run: |
+          echo "Pull request head ééé: {{ toJSON(github.event.pull_request.head) }}"
+          git fetch origin
+          echo "one -----------------"
+          git checkout ${{ github.event.pull_request.head.ref }}
+          echo "two -----------------"
+          git pull --rebase origin main
+          echo "three -----------------"
+          git push origin ${{ github.event.pull_request.head.ref }}
+          echo "four -----------------"
 
   remove-label:
     needs: [update-branch]
