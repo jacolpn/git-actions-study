@@ -27,6 +27,11 @@ jobs:
           echo "one -----------------"
           git checkout ${{ github.event.pull_request.head.ref }}
           echo "two -----------------"
+
+          git config pull.rebase false
+
+          echo "two2 -----------------"
+
           git pull origin main
 
           # Verificar se há conflitos durante o pull
