@@ -1,0 +1,116 @@
+name: Deploy project
+on:
+  push:
+    branches:
+      - main
+      - dev
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Load & cache dependencies
+        id: cache-deps
+        uses: ./.github/actions/cached-deps
+        with:
+            caching: 'true'
+
+      - name: Output information
+        run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
+
+      - name: Run lint
+        run: npm run lint
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Load & cache dependencies
+        uses: ./.github/actions/cached-deps
+        with:
+          caching: 'true'
+
+      - name: Run tests
+        run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      script-file: ${{ steps.publish.outputs.script-file }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Load & cache dependencies
+        uses: ./.github/actions/cached-deps
+        with:
+          caching: 'true'
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+  deploy:
+    env:
+        TESTE_USER_EMAIL: ${{ secrets.TESTE_USER_EMAIL }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Get build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./dist
+
+      - name: Output contents
+        run: ls
+
+      - name: Output filename
+        run: echo "${{ needs.build.outputs.script-file }}"
+
+      - name: Deploy
+        uses: ./.github/actions/deploy-s3-javascript
+        # run: echo "Deploying ... ${{ env.TESTE_USER_EMAIL }}"
+  report:
+    needs: [lint, deploy]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"
+  # information:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get code
+  #       uses: actions/checkout@v3
+
+  #     - name: Run custom action
+  #       uses: ./.github/actions/deploy-s3-javascript
