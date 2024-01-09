@@ -27,7 +27,14 @@ jobs:
           echo "one -----------------"
           git checkout ${{ github.event.pull_request.head.ref }}
           echo "two -----------------"
-          git pull --rebase origin main
+          git pull origin main
+
+          # Verificar se há conflitos durante o pull
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "Conflitos detectados durante o pull. Resolva manualmente e faça o commit."
+            exit 1
+          fi
+
           echo "three -----------------"
           git push origin ${{ github.event.pull_request.head.ref }}
           echo "four -----------------"
