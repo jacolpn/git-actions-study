@@ -26,8 +26,7 @@ jobs:
 
           git fetch origin
           git checkout ${{ github.event.pull_request.head.ref }}
-          git config pull.rebase false
-          git pull origin main
+          git rebase origin/main
 
           # Verify conflicts
           if git diff --name-only --diff-filter=U | grep -q .; then
