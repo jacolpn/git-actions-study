@@ -26,7 +26,7 @@ jobs:
 
           git fetch origin
           git checkout ${{ github.event.pull_request.head.ref }}
-          git config pull.rebase true
+          git config pull.rebase false
           git pull origin main
 
           # Verify conflicts
