@@ -26,10 +26,8 @@ jobs:
           git checkout ${{ github.event.pull_request.head.ref }}
           git config pull.rebase false
           git pull origin main
+          git commit --amend -m "Merge branch 'main' of ${{ github.event.pull_request.head.ref }}"
           git push origin ${{ github.event.pull_request.head.ref }}
-
-          # Altera a mensagem do commit de merge
-          git commit --amend -m "Auto-update branch: ${{ github.event.pull_request.head.ref }}"
 
   remove-label:
     needs: [update-branch]
