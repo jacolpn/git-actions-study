@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, edited, synchronize]
+    branches: [main]
+
+jobs:
+  lint:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Load & cache dependencies
+        id: cache-deps
+        uses: ./.github/actions/cached-deps
+        with:
+          caching: 'true'
+
+      - name: Output information
+        run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
+
+      - name: Run lint
+        run: npm run lint
+  report:
+    needs: [lint]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"
