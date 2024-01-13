@@ -1,4 +1,5 @@
-name: Deploy project
+name: CD
+
 on:
   push:
     branches:
