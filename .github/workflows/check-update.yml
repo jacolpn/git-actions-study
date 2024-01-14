@@ -25,13 +25,18 @@ jobs:
         shell: bash
         run: git config user.email "<>" && git config user.name "🤖 github-actions[bot]"
 
+      - name: Get target branch
+        run: |
+          target_branch=$(echo "${{ github.event.pull_request.base.ref }}")
+          echo "Target branch: $target_branch"
+
       - name: Update branch
         run: |
           git fetch origin
           git checkout ${{ env.BRANCH_ORIGIN }}
           git config pull.rebase false
           git pull origin ${{ env.BRANCH_DESTINY }}
-          git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' of ${{ env.BRANCH_ORIGIN }}"
+          git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' into ${{ env.BRANCH_ORIGIN }}"
           git push origin ${{ env.BRANCH_ORIGIN }}
 
   remove-label:
