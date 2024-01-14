@@ -6,7 +6,12 @@ on:
       - labeled
   schedule:
     - cron: '0 * * * *' # Run every hour
-
+env:
+  BRANCH_ORIGIN: ${{ github.event.pull_request.head.ref }}
+  BRANCH_DESTINY: ${{ github.event.pull_request.base.ref }}
+  GITHUB_AUTH_TOKEN: ${{ secrets.GH_API_TOKEN }}
+  REPOSITORY: ${{ github.repository }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
 jobs:
   update-branch:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'autoupdate') }}
@@ -23,11 +28,11 @@ jobs:
       - name: Update branch
         run: |
           git fetch origin
-          git checkout ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ env.BRANCH_ORIGIN }}
           git config pull.rebase false
-          git pull origin main
-          git commit --amend -m "Merge branch 'main' of ${{ github.event.pull_request.head.ref }}"
-          git push origin ${{ github.event.pull_request.head.ref }}
+          git pull origin ${{ env.BRANCH_DESTINY }}
+          git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' of ${{ env.BRANCH_ORIGIN }}"
+          git push origin ${{ env.BRANCH_ORIGIN }}
 
   remove-label:
     needs: [update-branch]
@@ -40,8 +45,8 @@ jobs:
           # https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28
           curl -L -X DELETE \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GH_API_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels/autoupdate
+            -H "Authorization: Bearer ${{ env.GITHUB_AUTH_TOKEN }}" \
+            https://api.github.com/repos/${{ env.REPOSITORY }}/issues/${{ env.PR_NUMBER }}/labels/autoupdate
 
       - name: Output information
         run: |
