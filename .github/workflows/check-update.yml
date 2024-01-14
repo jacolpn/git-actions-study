@@ -27,7 +27,7 @@ jobs:
           git config pull.rebase false
           git pull origin main
           git commit --amend -m "Merge branch 'main' of ${{ github.event.pull_request.head.ref }}"
-          git push --force origin ${{ github.event.pull_request.head.ref }}
+          git push origin ${{ github.event.pull_request.head.ref }}
 
   remove-label:
     needs: [update-branch]
