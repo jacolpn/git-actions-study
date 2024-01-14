@@ -27,7 +27,6 @@ jobs:
 
       - name: Update branch
         run: |
-          echo "Branchs jacks: ${{ env.BRANCH_ORIGIN }}, ${{ env.BRANCH_DESTINY }}"
           git fetch origin
           git checkout ${{ env.BRANCH_ORIGIN }}
           git config pull.rebase false
