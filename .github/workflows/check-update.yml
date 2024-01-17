@@ -49,7 +49,7 @@ jobs:
             -H "Authorization: Bearer ${{ env.GITHUB_AUTH_TOKEN }}" \
             https://api.github.com/repos/${{ env.REPOSITORY }}/issues/${{ env.PR_NUMBER }}/labels/autoupdate
 
-      - name: Adiciona comentario de erro
+      - name: Add comment when something went wrong
         run: |
           # Add comment
           curl -L -X POST \
