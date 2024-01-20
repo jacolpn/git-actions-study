@@ -39,9 +39,10 @@ jobs:
         run: |
           workflow_name="CI"
           url="https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows"
-          workflow_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" $url | jq -r '.workflows[] | select(.name == $workflow_name) | .id')
+          workflow_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" $url | jq -r --arg workflow_name "$workflow_name" '.workflows[] | select(.name == $workflow_name) | .id')
           echo "CI Workflow ID: $workflow_id"
           echo "::set-output name=workflow_id::$workflow_id"
+
 
       - name: Trigger CI
         run: |
