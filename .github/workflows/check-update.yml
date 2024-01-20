@@ -37,7 +37,7 @@ jobs:
       - name: Get CI Workflow ID
         id: get_ci_workflow
         run: |
-          workflow_name="CI"  # Substitua pelo nome do seu workflow
+          workflow_name="CI"
           url="https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows"
           workflow_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" $url | jq -r '.workflows[] | select(.name == $workflow_name) | .id')
           echo "CI Workflow ID: $workflow_id"
@@ -51,7 +51,7 @@ jobs:
             -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" \
             https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows/${{ steps.get_ci_workflow.outputs.workflow_id }}/dispatches \
             -d '{"ref":"${{ env.BRANCH_ORIGIN }}"}'
-        if: always()  # Always run this step
+        if: always()
 
   remove-label:
     needs: [update-branch]
