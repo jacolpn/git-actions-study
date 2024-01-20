@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [opened, reopened, ready_for_review, edited, synchronize]
     branches: [main]
+  push:
+    branches-ignore:
+      - main
   workflow_run:
       workflows: ["Auto update branch"]
       types:
