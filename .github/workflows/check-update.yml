@@ -34,6 +34,25 @@ jobs:
           git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' into ${{ env.BRANCH_ORIGIN }}"
           git push origin ${{ env.BRANCH_ORIGIN }}
 
+      - name: Get CI Workflow ID
+        id: get_ci_workflow
+        run: |
+          workflow_name="CI"  # Substitua pelo nome do seu workflow
+          url="https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows"
+          workflow_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" $url | jq -r '.workflows[] | select(.name == $workflow_name) | .id')
+          echo "CI Workflow ID: $workflow_id"
+          echo "::set-output name=workflow_id::$workflow_id"
+
+      - name: Trigger CI
+        run: |
+          echo "CI Workflow ID: $workflow_id  -- ${{ steps.get_ci_workflow.outputs.workflow_id }}"
+          curl -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" \
+            https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows/${{ steps.get_ci_workflow.outputs.workflow_id }}/dispatches \
+            -d '{"ref":"${{ env.BRANCH_ORIGIN }}"}'
+        if: always()  # Always run this step
+
   remove-label:
     needs: [update-branch]
     if: failure()
