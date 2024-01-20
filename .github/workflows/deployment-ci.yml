@@ -11,6 +11,12 @@ on:
       workflows: ["Auto update branch"]
       types:
         - completed
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to update'
+        required: true
+        default: 'main'
 
 concurrency:
     group: ci-${{ github.event.number }}
