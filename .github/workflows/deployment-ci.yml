@@ -5,6 +5,10 @@ on:
     types: [opened, reopened, ready_for_review, edited, synchronize]
     branches: [main]
 
+concurrency:
+    group: ci-${{ github.event.number }}
+    cancel-in-progress: true
+
 jobs:
   lint:
     permissions:
