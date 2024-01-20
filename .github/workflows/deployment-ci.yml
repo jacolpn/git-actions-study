@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [opened, reopened, ready_for_review, edited, synchronize]
     branches: [main]
+  check_run:
+    types: [created, rerequested, completed, requested_action]
   workflow_dispatch:
     inputs:
       branch:
