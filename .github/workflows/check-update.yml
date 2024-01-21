@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout da Branch
+      - name: Checkout da branch
         uses: actions/checkout@v3
 
       - name: Setup git user to "🤖 github-actions bot"
@@ -30,12 +30,11 @@ jobs:
         run: |
           git fetch origin
           git checkout ${{ env.BRANCH_ORIGIN }}
-          git config pull.rebase false
-          git pull origin ${{ env.BRANCH_DESTINY }}
+          git merge origin/${{ env.BRANCH_DESTINY }}
           git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' into ${{ env.BRANCH_ORIGIN }}"
           git push origin ${{ env.BRANCH_ORIGIN }}
 
-      - name: Get CI Workflow ID
+      - name: Get CI workflow ID
         id: get_ci_workflow
         run: |
           workflow_name="CI"
