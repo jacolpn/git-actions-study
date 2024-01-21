@@ -29,7 +29,7 @@ jobs:
         run: |
           git fetch origin
           git checkout ${{ env.BRANCH_ORIGIN }}
-          git merge ${{ env.BRANCH_DESTINY }}
+          git merge origin/${{ env.BRANCH_DESTINY }}
           git commit --a -m "Merge branch '${{ env.BRANCH_DESTINY }}' into ${{ env.BRANCH_ORIGIN }}"
           git push origin --f ${{ env.BRANCH_ORIGIN }}
 
