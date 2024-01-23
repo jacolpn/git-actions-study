@@ -28,6 +28,7 @@ jobs:
 
       - name: Update branch
         run: |
+          git fetch origin
           git checkout ${{ env.BRANCH_ORIGIN }}
           git merge origin/${{ env.BRANCH_DESTINY }}
           git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' into ${{ env.BRANCH_ORIGIN }}"
