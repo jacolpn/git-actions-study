@@ -25,7 +25,7 @@ jobs:
       - name: Setup git user to "🤖 github-actions bot"
         shell: bash
         run: git config user.email "<>" && git config user.name "🤖 github-actions[bot]"
-      
+
       - name: Update branch
         run: |
           git checkout ${{ env.BRANCH_ORIGIN }}
