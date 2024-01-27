@@ -15,10 +15,6 @@ on:
     types:
       - completed
 
-concurrency:
-    group: ci-${{ github.event.number }}
-    cancel-in-progress: true
-
 jobs:
   lint:
     permissions:
