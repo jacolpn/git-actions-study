@@ -9,7 +9,7 @@ on:
 env:
     BRANCH_ORIGIN: ${{ github.event.pull_request.head.ref }}
     BRANCH_DESTINY: ${{ github.event.pull_request.base.ref }}
-    GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GITHUB_AUTH_TOKEN: ${{ secrets.GH_API_TOKEN }}
     REPOSITORY: ${{ github.repository }}
     PR_NUMBER: ${{ github.event.pull_request.number }}
     REPOSITORY_OWNER: ${{ github.repository_owner }}
