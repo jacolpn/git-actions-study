@@ -1,19 +1,9 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-      - 'feat/**'
   pull_request:
     types: [opened, reopened, ready_for_review, edited, synchronize]
-    branches:
-      - main
-      - 'feat/**'
-  workflow_run:
-    workflows: ["Auto update branch"]
-    types:
-      - completed
+    branches: [main]
 
 jobs:
   lint:
