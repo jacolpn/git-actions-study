@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout da branch
         uses: actions/checkout@v3
+        with:
+          token: ${{ env.GITHUB_AUTH_TOKEN }}
 
       - name: Setup git user to "🤖 github-actions bot"
         shell: bash
