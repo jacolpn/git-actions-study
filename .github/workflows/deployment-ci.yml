@@ -7,12 +7,6 @@ on:
   push:
     branches:
       - '*'
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to update'
-        required: true
-        default: '*'
   workflow_run:
     workflows: ["Auto update branch"]
     types:
