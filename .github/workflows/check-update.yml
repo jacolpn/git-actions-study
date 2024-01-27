@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout da branch
         uses: actions/checkout@v3
+        with:
+          token: ${{ env.GITHUB_AUTH_TOKEN }}
 
       - name: Setup git user to "🤖 github-actions bot"
         shell: bash
@@ -33,25 +35,6 @@ jobs:
           git merge origin/${{ env.BRANCH_DESTINY }}
           git commit --amend -m "Merge branch '${{ env.BRANCH_DESTINY }}' into ${{ env.BRANCH_ORIGIN }}"
           git push origin ${{ env.BRANCH_ORIGIN }}
-
-      - name: Get CI workflow ID
-        id: get_ci_workflow
-        run: |
-          workflow_name="CI"
-          url="https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows"
-          workflow_id=$(curl -s -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" $url | jq -r --arg workflow_name "$workflow_name" '.workflows[] | select(.name == $workflow_name) | .id')
-          echo "CI Workflow ID: $workflow_id"
-          echo "::set-output name=workflow_id::$workflow_id"
-
-      - name: Trigger CI
-        run: |
-          echo "CI Workflow ID: $workflow_id  -- ${{ steps.get_ci_workflow.outputs.workflow_id }}"
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ env.GITHUB_AUTH_TOKEN }}" \
-            https://api.github.com/repos/${{ env.REPOSITORY }}/actions/workflows/${{ steps.get_ci_workflow.outputs.workflow_id }}/dispatches \
-            -d '{"ref":"${{ env.BRANCH_ORIGIN }}"}'
-        if: always()
 
   remove-label:
     needs: [update-branch]

@@ -4,12 +4,6 @@ on:
   pull_request:
     types: [opened, reopened, ready_for_review, edited, synchronize]
     branches: [main]
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to update'
-        required: true
-        default: 'main'
 
 concurrency:
     group: ci-${{ github.event.number }}
