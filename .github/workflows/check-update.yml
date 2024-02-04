@@ -5,7 +5,8 @@ on:
     types:
       - labeled
   schedule:
-    - cron: '0 * * * *' # Run every hour
+    - cron: '*/15 * * * *' # Run every 15 minutes
+
 env:
   BRANCH_ORIGIN: ${{ github.event.pull_request.head.ref }}
   BRANCH_DESTINY: ${{ github.event.pull_request.base.ref }}
@@ -16,7 +17,7 @@ env:
 jobs:
   update-branch:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'autoupdate') }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Small]
 
     steps:
       - name: Checkout da branch
