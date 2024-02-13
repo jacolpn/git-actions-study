@@ -1,9 +1,11 @@
 name: Auto update branch
 
 on:
-  pull_request:
+  pull_request_target:  # Target only the base branch for efficiency
     types:
       - labeled
+    labels:
+      - autoupdate
   schedule:
     - cron: '*/15 * * * *' # Run every 15 minutes
 
