@@ -1,7 +1,7 @@
 name: Auto update branch
 
 on:
-  pull_request_target:  # Target only the base branch for efficiency
+  pull_request:
     types:
       - labeled
     labels:
