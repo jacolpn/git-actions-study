@@ -4,6 +4,8 @@ on:
   pull_request:
     types:
       - labeled
+    labels:
+      - autoupdate
   schedule:
     - cron: '*/15 * * * *' # Run every 15 minutes
 
@@ -17,7 +19,7 @@ env:
 jobs:
   update-branch:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'autoupdate') }}
-    runs-on: [self-hosted, Small]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout da branch
